@@ -278,11 +278,6 @@ var (
 	// PolicyRevision is the current policy revision number for this agent
 	PolicyRevision = NoOpGauge
 
-	// PolicyImportErrorsTotal is a count of failed policy imports.
-	// This metric was deprecated in Cilium 1.14 and is to be removed in 1.15.
-	// It is replaced by PolicyChangeTotal metric.
-	PolicyImportErrorsTotal = NoOpCounter
-
 	// PolicyChangeTotal is a count of policy changes by outcome ("success" or
 	// "failure")
 	PolicyChangeTotal = NoOpCounterVec
@@ -803,16 +798,6 @@ func CreateConfiguration(metricsEnabled []string) (Configuration, []prometheus.C
 
 			collectors = append(collectors, PolicyRevision)
 			c.PolicyRegenerationTimeStatsEnabled = true
-
-		case Namespace + "_policy_import_errors_total":
-			PolicyImportErrorsTotal = prometheus.NewCounter(prometheus.CounterOpts{
-				Namespace: Namespace,
-				Name:      "policy_import_errors_total",
-				Help:      "Number of times a policy import has failed",
-			})
-
-			collectors = append(collectors, PolicyImportErrorsTotal)
-			c.PolicyImportErrorsEnabled = true
 
 		case Namespace + "_policy_change_total":
 			PolicyChangeTotal = prometheus.NewCounterVec(prometheus.CounterOpts{
